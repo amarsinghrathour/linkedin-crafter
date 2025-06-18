@@ -1,0 +1,597 @@
+/*
+ * Copyright 2024 Amar Singh Rathour (https://www.linkedin.com/in/amar-singh-rathour/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: 0;
+    background-color: #f0f2f5; /* Light gray background, common in professional apps */
+    color: #1c1e21; /* Dark gray for text */
+    display: flex;
+    flex-direction: column; /* Stack main and footer vertically */
+    align-items: center; /* Center them horizontally */
+    justify-content: flex-start; /* Align to top, allowing scroll */
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+main {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px; /* Increased max-width for more content */
+    margin-top: 20px; /* Renamed from margin to margin-top */
+    margin-bottom: 20px; /* Explicitly set margin-bottom for main */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: #0A66C2; /* LinkedIn Blue */
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #4b4f56; /* Softer text color for subheading */
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+section h2 {
+    color: #0A66C2;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95em;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccd0d5; /* Light border */
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+    color: #1c1e21;
+    background-color: #f5f6f7; /* Slightly off-white input background */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+    color: #8a8d91;
+    font-size: 0.95em;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0A66C2; /* LinkedIn Blue on focus */
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 70px; /* Adjusted min-height */
+}
+
+button[type="submit"],
+button#generatePostButton {
+    background-color: #0A66C2; /* LinkedIn Blue */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px; /* Added margin for submit button */
+}
+
+button#generatePostButton {
+    background-color: #0073b1; /* Slightly different blue for variety */
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+button[type="submit"]:hover,
+button#generatePostButton:hover {
+    background-color: #004182; /* Darker LinkedIn Blue */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button[type="submit"]:active,
+button#generatePostButton:active {
+    background-color: #003060; /* Even darker for active state */
+    transform: translateY(1px);
+}
+
+button[type="submit"]:disabled,
+button#generatePostButton:disabled {
+    background-color: #a0a0a0;
+    color: #e0e0e0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Status Messages - Standardized */
+.status-message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    min-height: 20px; /* Ensure space even when empty */
+    border: 1px solid transparent; /* Base for border */
+}
+
+#statusMessage,
+#postGenerationStatus,
+#imageGenerationStatus,
+#imageActionStatus,
+#apiKeyStatus { /* Added apiKeyStatus */
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    min-height: 20px; /* Ensure space even when empty */
+}
+
+
+#imageGenerationStatus {
+    margin-bottom: 10px; /* Space below image status before image appears */
+}
+
+#imageActionStatus {
+    margin-top: 8px; /* For messages below image action buttons */
+    font-size: 0.9em;
+    min-height: 18px; /* Slightly smaller min-height */
+}
+
+/* Status Message Types */
+.status-message.success, #statusMessage.success, #postGenerationStatus.success, #imageGenerationStatus.success, #imageActionStatus.success, #apiKeyStatus.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.status-message.error, #statusMessage.error, #postGenerationStatus.error, #imageGenerationStatus.error, #imageActionStatus.error, #apiKeyStatus.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.status-message.loading, #statusMessage.loading, #postGenerationStatus.loading, #imageGenerationStatus.loading, #imageActionStatus.loading, #apiKeyStatus.loading {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+.status-message.info, #statusMessage.info, #postGenerationStatus.info, #imageGenerationStatus.info, #imageActionStatus.info, #apiKeyStatus.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+
+.section-divider {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 40px 0;
+}
+
+.generated-content-card {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.generated-content-card h3, .generated-content-card h4 {
+    color: #0A66C2;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.generated-content-card h4 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 15px; /* Add some space above subheadings like "Suggested Hashtags", "Suggested Image Idea" */
+}
+.generated-content-card h4:first-of-type {
+    margin-top: 0; /* Remove top margin for the very first h4 ("Post Idea:") */
+}
+
+
+#postDisplay pre {
+    white-space: pre-wrap; /* Allows text to wrap */
+    word-wrap: break-word; /* Breaks long words */
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-family: inherit; /* Use body font for post */
+    font-size: 1em;
+    line-height: 1.6;
+    color: #2b2b2b; /* Slightly softer black for post text */
+    margin-bottom: 15px; /* Space before copy button */
+}
+
+.copy-action-area {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between button and status message */
+    margin-bottom: 15px;
+}
+
+#copyPostButton {
+    background-color: #28a745; /* Green for copy action */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+#copyPostButton:hover {
+    background-color: #218838; /* Darker green */
+}
+
+#copyPostButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#copyStatus {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #28a745; /* Green text for success */
+}
+
+
+#hashtagsDisplay p,
+.image-prompt-text { /* Style for image prompt paragraph */
+    font-style: italic;
+    color: #555;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px; /* Space below the prompt text */
+}
+
+button.generate-image-button {
+    background-color: #ff9900; /* Orange for image generation button */
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    width: auto; /* Allow button to size to content */
+    display: inline-block; /* Or block with margin auto for centering */
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px; /* Space below button */
+}
+
+button.generate-image-button:hover {
+    background-color: #e68a00; /* Darker orange */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button.generate-image-button:active {
+    background-color: #cc7a00; /* Even darker for active state */
+    transform: translateY(1px);
+}
+
+button.generate-image-button:disabled {
+    background-color: #a0a0a0;
+    color: #e0e0e0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+#generatedImageDisplay img {
+    max-width: 100%;
+    max-height: 400px; /* Max height for the image */
+    object-fit: contain; /* Scales image while preserving aspect ratio */
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f0f0f0; /* Placeholder background */
+}
+
+#imageActions {
+    display: flex; /* Aligns buttons in a row */
+    justify-content: center; /* Centers buttons */
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px;
+}
+
+button.image-action-button {
+    background-color: #007bff; /* Standard blue, adjust as needed */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+button.image-action-button:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+button.image-action-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#attributionsDisplay ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+#attributionsDisplay li {
+    margin-bottom: 5px;
+}
+
+#attributionsDisplay a {
+    color: #0073b1;
+    text-decoration: none;
+}
+
+#attributionsDisplay a:hover {
+    text-decoration: underline;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.app-footer {
+    text-align: center;
+    padding: 15px; /* Reduced padding slightly */
+    margin-top: 30px; /* Space above footer */
+    font-size: 0.85em; /* Slightly smaller footer text */
+    color: #4b4f56; /* Softer text color for footer */
+    width: 100%;
+    max-width: 700px; /* Match main content width */
+    box-sizing: border-box;
+    border-top: 1px solid #e0e0e0; /* Subtle separator line */
+}
+
+.app-footer p {
+    margin: 6px 0; /* Adjusted spacing for footer paragraphs */
+    line-height: 1.5;
+}
+
+.app-footer a {
+    color: #0A66C2; /* LinkedIn blue for links in footer */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.app-footer a:hover {
+    text-decoration: underline;
+}
+
+.app-footer .tagline {
+    font-style: italic;
+    color: #0A66C2; /* LinkedIn blue for a touch of branding */
+}
+
+.app-footer .powered-by {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* Space between icon and text */
+}
+
+.app-footer .powered-by img {
+    height: 1.1em; /* Control icon size relative to font */
+    vertical-align: middle; /* Ensures good alignment with text */
+}
+
+/* API Key Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    text-align: left;
+}
+
+.modal-content h3 {
+    color: #0A66C2;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+}
+
+.modal-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 0.95em;
+    color: #4b4f56;
+}
+
+.modal-content .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-content label {
+    font-size: 0.9em; /* Slightly smaller label in modal */
+}
+
+.modal-content input[type="password"] {
+    background-color: #ffffff; /* White background for modal input */
+}
+
+.modal-button, button#saveApiKeyButton {
+    background-color: #0A66C2;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    width: 100%;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+
+.modal-button:hover, button#saveApiKeyButton:hover {
+    background-color: #004182;
+}
+.modal-button:disabled, button#saveApiKeyButton:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+
+#apiKeyStatus {
+    margin-top: 15px;
+    font-size: 0.9em; /* Slightly smaller status for modal */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    main {
+        padding: 20px 15px;
+        margin-top: 10px;
+        margin-bottom: 15px; /* Adjusted margin for smaller screens */
+    }
+
+    header h1 {
+        font-size: 1.8em;
+    }
+    section h2 {
+        font-size: 1.3em;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    button[type="submit"],
+    button#generatePostButton {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+    
+    button.generate-image-button {
+        font-size: 0.95em;
+        padding: 9px 16px;
+    }
+
+    .generated-content-card {
+        padding: 15px;
+    }
+
+    #copyPostButton {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+    
+    button.image-action-button {
+        font-size: 0.85em;
+        padding: 7px 12px;
+    }
+
+    .app-footer {
+        margin-top: 20px;
+        padding: 10px;
+        font-size: 0.8em;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+    .modal-content h3 {
+        font-size: 1.4em;
+    }
+}

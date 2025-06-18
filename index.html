@@ -1,0 +1,146 @@
+<!--
+ Copyright 2024 Amar Singh Rathour (https://www.linkedin.com/in/amar-singh-rathour/)
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ SPDX-License-Identifier: Apache-2.0
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Personal Branding Assistant</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <script src="env-config.js"></script> <!-- For local API_KEY configuration -->
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.5.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="apiKeyModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>API Key Required</h3>
+            <p>Please enter your Google Gemini API Key to enable AI features. You can obtain a key from <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
+            <div class="form-group">
+                <label for="apiKeyInput">Google Gemini API Key:</label>
+                <input type="password" id="apiKeyInput" name="apiKeyInput" placeholder="Enter your API Key">
+            </div>
+            <button id="saveApiKeyButton" class="modal-button">Save & Use API Key</button>
+            <div id="apiKeyStatus" role="status" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <main>
+        <header>
+            <h1>LinkedIn Personal Branding Assistant</h1>
+            <p>Define your context, and let AI help you craft engaging posts and images to build your brand.</p>
+        </header>
+
+        <section id="profileSection" aria-labelledby="profileSectionHeading">
+            <h2 id="profileSectionHeading">1. Your Profile Context</h2>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="e.g., Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label for="headline">LinkedIn Headline / Current Role</label>
+                    <input type="text" id="headline" name="headline" required placeholder="e.g., Senior Software Engineer at Tech Corp | AI Enthusiast">
+                </div>
+                <div class="form-group">
+                    <label for="niche">Niche</label>
+                    <input type="text" id="niche" name="niche" required placeholder="e.g., AI in Healthcare, Sustainable Fashion, SaaS Marketing">
+                </div>
+                <div class="form-group">
+                    <label for="industry">Industry</label>
+                    <input type="text" id="industry" name="industry" required placeholder="e.g., Technology, Healthcare, E-commerce">
+                </div>
+                <div class="form-group">
+                    <label for="targetAudience">Target Audience</label>
+                    <textarea id="targetAudience" name="targetAudience" rows="3" required placeholder="Describe your ideal client, follower, or connection. e.g., CTOs in mid-sized tech companies..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="linkedinGoal">Primary Goal on LinkedIn</label>
+                    <textarea id="linkedinGoal" name="linkedinGoal" rows="3" required placeholder="e.g., Generate leads, Build brand awareness, Establish thought leadership..."></textarea>
+                </div>
+                <button type="submit" id="submitButton">Save Profile Context</button>
+                <div id="statusMessage" role="status" aria-live="polite"></div>
+            </form>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="contentGenerationSection" aria-labelledby="contentGenerationHeading">
+            <h2 id="contentGenerationHeading">2. Generate LinkedIn Content</h2>
+            <button id="generatePostButton" aria-label="Generate a new LinkedIn post" disabled>Generate Engaging Post</button>
+            <div id="postGenerationStatus" role="status" aria-live="polite"></div>
+
+            <div id="generatedPostArea" class="generated-content-card" style="display: none;" aria-labelledby="generatedPostContentHeading">
+                <h3 id="generatedPostContentHeading" class="sr-only">Generated Content</h3>
+                
+                <div id="postDisplay">
+                    <h4>Post Idea:</h4>
+                    <pre id="postText"></pre>
+                    <div class="copy-action-area">
+                        <button id="copyPostButton" aria-label="Copy generated post text" style="display: none;">Copy Post Text</button>
+                        <span id="copyStatus" aria-live="polite"></span>
+                    </div>
+                </div>
+
+                <div id="hashtagsDisplay">
+                    <h4>Suggested Hashtags:</h4>
+                    <p id="hashtagsText"></p>
+                </div>
+
+                <div id="imageIdeaSection" style="display: none;">
+                    <h4>Suggested Image Idea:</h4>
+                    <p id="imagePromptText" class="image-prompt-text"></p>
+                    <button id="generateImageButton" class="generate-image-button" aria-label="Generate image based on suggestion">Generate Image</button>
+                    <div id="imageGenerationStatus" role="status" aria-live="polite"></div>
+                    <div id="generatedImageDisplay" style="display: none; margin-top: 15px;">
+                        <img id="generatedImage" src="#" alt="Generated image based on post">
+                        <div id="imageActions" style="display: none; margin-top: 10px; text-align: center;">
+                            <button id="downloadImageButton" class="image-action-button" aria-label="Download generated image">Download Image</button>
+                            <button id="copyImageButton" class="image-action-button" aria-label="Copy generated image">Copy Image</button>
+                            <div id="imageActionStatus" role="status" aria-live="polite" style="margin-top: 8px; font-size: 0.9em;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="attributionsDisplay" style="display: none;">
+                    <h4>Sources (from web search):</h4>
+                    <ul id="attributionsList"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>Built with <span role="img" aria-label="heart" style="color: red;">❤️</span> by <a href="https://www.linkedin.com/in/amar-singh-rathour/" target="_blank" rel="noopener noreferrer">Amar Singh Rathour</a></p>
+        <p class="tagline">Crafting your digital voice, one post at a time.</p>
+        <p class="powered-by">
+            Powered by <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230A66C2' width='16px' height='16px'%3E%3Cpath d='M12 2a10 10 0 00-7.071 17.071A10 10 0 1019.071 4.929 9.929 9.929 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-6.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm-3.5-3a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm7-3a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm-3.5 9a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z'/%3E%3C/svg%3E" alt="AI icon"> Google Gen AI
+        </p>
+    </footer>
+
+    <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

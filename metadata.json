@@ -1,0 +1,6 @@
+{
+  "name": "LinkedIn Personal Branding Assistant",
+  "description": "Helps users define their LinkedIn profile context and uses AI to generate engaging posts with relevant hashtags to build their personal brand.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
