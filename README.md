@@ -45,8 +45,8 @@ Follow these steps to run the application locally:
 
 1.  **Clone the Repository (if you haven't already):**
     ```bash
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/amarsinghrathour/linkedin-crafter
+    cd linkedin-crafter
     ```
 
 2.  **Configure API Key (Optional but Recommended for Local Dev):**
